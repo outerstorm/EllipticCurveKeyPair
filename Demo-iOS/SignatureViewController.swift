@@ -31,9 +31,9 @@ class SignatureViewController: UIViewController {
     struct Shared {
         static let keypair: EllipticCurveKeyPair.Manager = {
             EllipticCurveKeyPair.logger = { print($0) }
-            let publicAccessControl = EllipticCurveKeyPair.AccessControl(protection: kSecAttrAccessibleAlwaysThisDeviceOnly, flags: [])
-            let privateAccessControl = EllipticCurveKeyPair.AccessControl(protection: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly, flags: {
-                return EllipticCurveKeyPair.Device.hasSecureEnclave ? [.userPresence, .privateKeyUsage] : [.userPresence]
+            let publicAccessControl = EllipticCurveKeyPair.AccessControl(protection: kSecAttrAccessibleWhenUnlockedThisDeviceOnly, flags: [])
+            let privateAccessControl = EllipticCurveKeyPair.AccessControl(protection: kSecAttrAccessibleWhenUnlockedThisDeviceOnly, flags: {
+                return EllipticCurveKeyPair.Device.hasSecureEnclave ? [.privateKeyUsage, .applicationPassword] : [.applicationPassword]
             }())
             let config = EllipticCurveKeyPair.Config(
                 publicLabel: "no.agens.sign.public",
@@ -48,27 +48,34 @@ class SignatureViewController: UIViewController {
     
     var context: LAContext! = LAContext()
     
+    let validPassword = "testPassword"
+    let invalidPassword = "someOtherPassword"
+    
     @IBOutlet weak var publicKeyTextView: UITextView!
     @IBOutlet weak var digestTextView: UITextView!
     @IBOutlet weak var signatureTextView: UITextView!
-
+    @IBOutlet weak var verifyTextView: UITextView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        do {
-            let key = try Shared.keypair.publicKey().data()
-            publicKeyTextView.text = key.PEM
-        } catch {
-            publicKeyTextView.text = "Error: \(error)"
-        }
+        setValidPassword(self)
+        ensureKeyPair()
     }
     
     @IBAction func regeneratePublicKey(_ sender: Any) {
-        context = LAContext()
+        try? Shared.keypair.deleteKeyPair()
+        ensureKeyPair()
+    }
+    
+    private func ensureKeyPair() {
         do {
-            try Shared.keypair.deleteKeyPair()
-            let key = try Shared.keypair.publicKey().data()
+            if !Shared.keypair.keyExists(context: context) {
+                let _ = try Shared.keypair.generateKeyPair(context: context)
+            }
+            let key = try Shared.keypair.generateKeyPair(context: context).public.data()
             publicKeyTextView.text = key.PEM
+            print(publicKeyTextView.text)
         } catch {
             publicKeyTextView.text = "Error: \(error)"
         }
@@ -95,15 +102,47 @@ class SignatureViewController: UIViewController {
             }
             return digest
         }, thenAsync: { digest in
-            return try Shared.keypair.signUsingSha256(digest, context: self.context)
+            return try Shared.keypair.sign(digest, hash: .sha512, context: self.context)
         }, thenOnMain: { digest, signature in
             self.signatureTextView.text = signature.base64EncodedString()
-            try Shared.keypair.verifyUsingSha256(signature: signature, originalDigest: digest)
-            try printVerifySignatureInOpenssl(manager: Shared.keypair, signed: signature, digest: digest, hashAlgorithm: "sha256")
+            print("Digest: \(String(describing: String(data: digest, encoding: .utf8)))")
+            print("Signature: \(String(describing: self.signatureTextView.text))")
+            self.verify(self)
         }, catchToMain: { error in
             self.signatureTextView.text = "Error: \(error)"
         })
     }
     
-}
+    @IBAction func verify(_ sender: Any) {
+        guard let signatureBase64 = signatureTextView.text, signatureBase64.count > 0 else {
+            verifyTextView.text = "Error: No signature to verify"
+            return //no signature to work with
+        }
+        guard let signature = Data(base64Encoded: signatureBase64) else {
+            verifyTextView.text = "Error: Unable to get signature data"
+            return //unable to get data from signature
+        }
+        guard let digestString = digestTextView.text,
+            let digest = digestString.data(using: .utf8), digest.count > 0 else {
+                verifyTextView.text = "Error: No digest to verify signature against"
+                return //nothing to verify
+        }
 
+        do {
+            try Shared.keypair.verify(signature: signature, originalDigest: digest, hash: .sha512)
+            try printVerifySignatureInOpenssl(manager: Shared.keypair, signed: signature, digest: digest, hashAlgorithm: "sha512")
+            verifyTextView.text = "Verified successfully"
+        } catch {
+            verifyTextView.text = "Error: \(error)"
+        }
+    }
+    
+    @IBAction func setValidPassword(_ sender: Any) {
+        context.setCredential(validPassword.data(using: .utf8), type: .applicationPassword)
+    }
+
+    @IBAction func setInvalidPassword(_ sender: Any) {
+        context.setCredential(invalidPassword.data(using: .utf8), type: .applicationPassword)
+    }
+
+}
