@@ -88,13 +88,11 @@ public enum EllipticCurveKeyPair {
     // and create your own manager
     public final class Manager {
         
-        private let config: Config
         private let helper: Helper
         private var cachedPublicKey: PublicKey? = nil
         private var cachedPrivateKey: PrivateKey? = nil
         
         public init(config: Config) {
-            self.config = config
             self.helper = Helper(config: config)
         }
         
@@ -168,7 +166,9 @@ public enum EllipticCurveKeyPair {
         // The user visible label in the device's key chain
         public let config: Config
         
-        public init() {}
+        public init(config: Config) {
+            self.config = config
+        }
         
         public func getPublicKey() throws -> PublicKey {
             return try Query.getPublicKey(labeled: config.publicLabel, accessGroup: config.publicKeyAccessGroup)
