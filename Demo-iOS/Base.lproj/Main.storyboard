@@ -176,7 +176,7 @@
                             <constraint firstAttribute="trailing" secondItem="sy9-vn-TzU" secondAttribute="trailing" id="xon-E1-JyP"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Sign" image="second" id="cPa-gy-q4n"/>
+                    <tabBarItem key="tabBarItem" title="Sign" image="first" id="cPa-gy-q4n"/>
                     <connections>
                         <outlet property="digestTextView" destination="SzU-ap-qkj" id="e19-bH-sjO"/>
                         <outlet property="publicKeyTextView" destination="8qh-c7-jBU" id="0US-lJ-RHS"/>
@@ -186,7 +186,139 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="749.60000000000002" y="359.37031484257875"/>
+            <point key="canvasLocation" x="614" y="-143"/>
+        </scene>
+        <!--Verify-->
+        <scene sceneID="kKI-Ss-9UE">
+            <objects>
+                <viewController id="xY9-vl-XAc" userLabel="Verify" customClass="VerifyViewController" customModule="Demo_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="sLk-Z1-hMb"/>
+                        <viewControllerLayoutGuide type="bottom" id="Zyr-Cu-bJ8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="V5K-OO-QSf">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EGr-9h-WNM">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
+                                <subviews>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b9G-Ux-5KH">
+                                        <rect key="frame" x="16" y="87.5" width="343" height="90"/>
+                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="90" id="uqD-0x-de4"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="12"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                    </textView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Digest" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VL3-H1-gNv">
+                                        <rect key="frame" x="16" y="185.5" width="49.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="185" placeholderIntrinsicHeight="21" text="Public key" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gfx-nU-Liv">
+                                        <rect key="frame" x="16" y="58.5" width="185" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Lorem ipsum dolor sit amet" translatesAutoresizingMaskIntoConstraints="NO" id="Bcn-Cy-9im">
+                                        <rect key="frame" x="16" y="214" width="343" height="50"/>
+                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="Sdx-hc-jd0"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="12"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                    </textView>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aYv-1n-7eI">
+                                        <rect key="frame" x="16" y="301" width="343" height="90"/>
+                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="90" id="Ry3-gV-Go4"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="12"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                    </textView>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="..." translatesAutoresizingMaskIntoConstraints="NO" id="VZz-dh-XGy">
+                                        <rect key="frame" x="16" y="432.5" width="343" height="90"/>
+                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="90" id="oJ9-hE-79J"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="12"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                    </textView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="185" placeholderIntrinsicHeight="21" text="Signature" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e3P-QG-9KO">
+                                        <rect key="frame" x="16" y="272" width="185" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="185" placeholderIntrinsicHeight="21" text="Verification" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pmm-OD-cRc">
+                                        <rect key="frame" x="16" y="403.5" width="185" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EIc-cd-gwH">
+                                        <rect key="frame" x="319" y="399" width="40" height="30"/>
+                                        <state key="normal" title="Verify"/>
+                                        <connections>
+                                            <action selector="verify:" destination="xY9-vl-XAc" eventType="touchUpInside" id="6Sd-Bn-sGh"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="VZz-dh-XGy" firstAttribute="top" secondItem="Pmm-OD-cRc" secondAttribute="bottom" constant="8" symbolic="YES" id="1K2-jD-DEE"/>
+                                    <constraint firstItem="VL3-H1-gNv" firstAttribute="top" secondItem="b9G-Ux-5KH" secondAttribute="bottom" constant="8" symbolic="YES" id="6DO-8s-R7Q"/>
+                                    <constraint firstItem="b9G-Ux-5KH" firstAttribute="centerX" secondItem="EGr-9h-WNM" secondAttribute="centerX" id="7SD-ng-qIR"/>
+                                    <constraint firstItem="e3P-QG-9KO" firstAttribute="leading" secondItem="aYv-1n-7eI" secondAttribute="leading" id="9WO-mE-Xmg"/>
+                                    <constraint firstItem="VZz-dh-XGy" firstAttribute="trailing" secondItem="EIc-cd-gwH" secondAttribute="trailing" id="Boh-ej-4ir"/>
+                                    <constraint firstItem="VL3-H1-gNv" firstAttribute="leading" secondItem="Bcn-Cy-9im" secondAttribute="leading" id="CfM-PK-PFz"/>
+                                    <constraint firstItem="VZz-dh-XGy" firstAttribute="leading" secondItem="Pmm-OD-cRc" secondAttribute="leading" id="Ec4-6j-qoP"/>
+                                    <constraint firstItem="e3P-QG-9KO" firstAttribute="top" secondItem="Bcn-Cy-9im" secondAttribute="bottom" constant="8" symbolic="YES" id="JAy-vv-lvc"/>
+                                    <constraint firstItem="Pmm-OD-cRc" firstAttribute="leading" secondItem="aYv-1n-7eI" secondAttribute="leading" id="RnE-ny-yQT"/>
+                                    <constraint firstItem="EIc-cd-gwH" firstAttribute="top" secondItem="aYv-1n-7eI" secondAttribute="bottom" constant="8" id="TWs-sV-zfX"/>
+                                    <constraint firstItem="Bcn-Cy-9im" firstAttribute="top" secondItem="VL3-H1-gNv" secondAttribute="bottom" constant="8" symbolic="YES" id="Yki-k4-IbA"/>
+                                    <constraint firstItem="b9G-Ux-5KH" firstAttribute="leading" secondItem="VL3-H1-gNv" secondAttribute="leading" id="cjP-Gc-E3x"/>
+                                    <constraint firstItem="Gfx-nU-Liv" firstAttribute="leading" secondItem="b9G-Ux-5KH" secondAttribute="leading" id="imD-xI-kV6"/>
+                                    <constraint firstItem="Gfx-nU-Liv" firstAttribute="leading" secondItem="EGr-9h-WNM" secondAttribute="leading" constant="16" id="kz8-XD-xgB"/>
+                                    <constraint firstItem="aYv-1n-7eI" firstAttribute="trailing" secondItem="Bcn-Cy-9im" secondAttribute="trailing" id="oGe-aH-iOQ"/>
+                                    <constraint firstItem="aYv-1n-7eI" firstAttribute="top" secondItem="e3P-QG-9KO" secondAttribute="bottom" constant="8" symbolic="YES" id="rpe-ew-5xW"/>
+                                    <constraint firstItem="Bcn-Cy-9im" firstAttribute="leading" secondItem="e3P-QG-9KO" secondAttribute="leading" id="sYN-kP-3ey"/>
+                                    <constraint firstItem="b9G-Ux-5KH" firstAttribute="top" secondItem="EGr-9h-WNM" secondAttribute="top" constant="87.5" id="scs-Dh-trq"/>
+                                    <constraint firstItem="EIc-cd-gwH" firstAttribute="trailing" secondItem="aYv-1n-7eI" secondAttribute="trailing" id="vWC-nO-4Tl"/>
+                                    <constraint firstItem="Bcn-Cy-9im" firstAttribute="trailing" secondItem="b9G-Ux-5KH" secondAttribute="trailing" id="wh7-eW-PWo"/>
+                                    <constraint firstAttribute="bottom" secondItem="VZz-dh-XGy" secondAttribute="bottom" constant="20" id="wtS-hj-a2c"/>
+                                    <constraint firstItem="b9G-Ux-5KH" firstAttribute="top" secondItem="Gfx-nU-Liv" secondAttribute="bottom" constant="8" symbolic="YES" id="xK2-KG-YkR"/>
+                                    <constraint firstAttribute="trailing" secondItem="b9G-Ux-5KH" secondAttribute="trailing" constant="16" id="xWC-zt-XHP"/>
+                                    <constraint firstItem="Pmm-OD-cRc" firstAttribute="centerY" secondItem="EIc-cd-gwH" secondAttribute="centerY" id="zRx-c4-Jg4"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="EGr-9h-WNM" firstAttribute="bottom" secondItem="Zyr-Cu-bJ8" secondAttribute="top" id="1ue-en-pMw"/>
+                            <constraint firstItem="EGr-9h-WNM" firstAttribute="leading" secondItem="V5K-OO-QSf" secondAttribute="leading" id="F5O-5j-PAJ"/>
+                            <constraint firstAttribute="trailing" secondItem="EGr-9h-WNM" secondAttribute="trailing" id="fyA-LE-WgH"/>
+                            <constraint firstItem="EGr-9h-WNM" firstAttribute="top" secondItem="V5K-OO-QSf" secondAttribute="top" id="yOK-7V-2ub"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Verify" image="second" id="tAJ-5k-6jq"/>
+                    <connections>
+                        <outlet property="digestTextView" destination="Bcn-Cy-9im" id="hvQ-zA-ldQ"/>
+                        <outlet property="publicKeyTextView" destination="b9G-Ux-5KH" id="VX4-aB-Szw"/>
+                        <outlet property="signatureTextView" destination="aYv-1n-7eI" id="B1y-Og-lt7"/>
+                        <outlet property="verifyButton" destination="EIc-cd-gwH" id="Rc1-KG-1E7"/>
+                        <outlet property="verifyTextView" destination="VZz-dh-XGy" id="LY9-0Y-x1R"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yfs-bP-aaB" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="614" y="550"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
@@ -200,6 +332,7 @@
                     </tabBar>
                     <connections>
                         <segue destination="8rJ-Kc-sve" kind="relationship" relationship="viewControllers" id="lzU-1b-eKA"/>
+                        <segue destination="xY9-vl-XAc" kind="relationship" relationship="viewControllers" id="ncm-xS-da7"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
@@ -208,6 +341,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="first" width="30" height="30"/>
         <image name="second" width="30" height="30"/>
     </resources>
 </document>

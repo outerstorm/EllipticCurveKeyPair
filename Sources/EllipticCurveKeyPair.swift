@@ -117,7 +117,7 @@ public enum EllipticCurveKeyPair {
             return keys
         }
         
-        public func publicKey() throws -> PublicKey {
+        public func getPublicKey() throws -> PublicKey {
             if let key = cachedPublicKey {
                 return key
             }
@@ -126,7 +126,7 @@ public enum EllipticCurveKeyPair {
             return key
         }
         
-        private func privateKey(context: LAContext? = nil) throws -> PrivateKey {
+        private func getPrivateKey(context: LAContext? = nil) throws -> PrivateKey {
             if cachedPrivateKey?.context !== context {
                 cachedPrivateKey = nil
             }
@@ -139,8 +139,8 @@ public enum EllipticCurveKeyPair {
         }
         
         public func keys(context: LAContext? = nil) throws -> (`public`: PublicKey, `private`: PrivateKey) {
-            let privateKey = try self.privateKey(context: context)
-            let publicKey = try self.publicKey()
+            let privateKey = try self.getPrivateKey(context: context)
+            let publicKey = try self.getPublicKey()
             return (public: publicKey, private: privateKey)
         }
         
@@ -150,11 +150,11 @@ public enum EllipticCurveKeyPair {
         }
         
         public func sign(_ digest: Data, hash: Hash, context: LAContext? = nil) throws -> Data {
-            return try helper.sign(digest, privateKey: privateKey(context: context), hash: hash)
+            return try helper.sign(digest, privateKey: getPrivateKey(context: context), hash: hash)
         }
         
-        public func verify(signature: Data, originalDigest: Data, hash: Hash) throws {
-            try helper.verify(signature: signature, digest: originalDigest, publicKey: publicKey(), hash: hash)
+        public func verify(signature: Data, originalDigest: Data, publicKey: PublicKey, hash: Hash) throws {
+            try helper.verify(signature: signature, digest: originalDigest, publicKey: publicKey, hash: hash)
         }
     }
     
@@ -434,7 +434,7 @@ public enum EllipticCurveKeyPair {
         public lazy var PEM: String = {
             var lines = String()
             lines.append("-----BEGIN PUBLIC KEY-----\n")
-            lines.append(self.DER.base64EncodedString(options: [.lineLength64Characters, .endLineWithCarriageReturn]))
+            lines.append(self.DER.base64EncodedString(options: []))
             lines.append("\n-----END PUBLIC KEY-----")
             return lines
         }()
@@ -448,7 +448,7 @@ public enum EllipticCurveKeyPair {
         
         public let underlying: SecKey
         
-        internal init(_ underlying: SecKey) {
+        public init(_ underlying: SecKey) {
             self.underlying = underlying
         }
         
@@ -695,5 +695,31 @@ public enum EllipticCurveKeyPair {
             return hasTouchID && !isSimulator
         }
         
+    }
+}
+
+public extension SecKey {
+    public static func publicKeyFromDERData(_ DER: Data) -> SecKey? {
+        // first we create the certificate reference
+        
+        let attributes: [String: Any] = [
+            String(kSecAttrKeyType): EllipticCurveKeyPair.Constants.attrKeyTypeEllipticCurve,
+            String(kSecClass): kSecClassKey,
+            String(kSecAttrKeyClass): kSecAttrKeyClassPublic,
+            String(kSecAttrKeySizeInBits): 256,
+            String(kSecAttrApplicationTag): "test",
+        ]
+        
+        let range = Range(26..<DER.count)
+        let last65 = DER.subdata(in: range)
+
+        var error: Unmanaged<CFError>?
+        let key = SecKeyCreateWithData(last65 as CFData, attributes as CFDictionary, &error)
+        
+        if let error = error {
+            print(error)
+        }
+        
+        return key
     }
 }

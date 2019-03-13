@@ -26,6 +26,19 @@ import UIKit
 import LocalAuthentication
 import EllipticCurveKeyPair
 
+struct State {
+    static var shared = State()
+    private init() { }
+    
+    struct Signature {
+        public var publicKey: EllipticCurveKeyPair.PublicKey
+        public var digest: Data
+        public var signature: Data
+    }
+    
+    var lastSignature: Signature?
+}
+
 class SignatureViewController: UIViewController {
     
     struct Shared {
@@ -64,7 +77,11 @@ class SignatureViewController: UIViewController {
     }
     
     @IBAction func regeneratePublicKey(_ sender: Any) {
-        try? Shared.keypair.deleteKeyPair()
+        do {
+            try Shared.keypair.deleteKeyPair()
+        } catch {
+            print("Unable to delete key pair")
+        }
         ensureKeyPair()
     }
     
@@ -73,9 +90,14 @@ class SignatureViewController: UIViewController {
             if !Shared.keypair.keyExists(context: context) {
                 let _ = try Shared.keypair.generateKeyPair(context: context)
             }
-            let key = try Shared.keypair.generateKeyPair(context: context).public.data()
+            let key = try Shared.keypair.getPublicKey().data()
             publicKeyTextView.text = key.PEM
-            print(publicKeyTextView.text)
+            
+            print("----\n\n\(key.DER.base64EncodedString())\n\n----")
+            
+            let exportData = exportECPublicKeyToDER(key.raw, keyType: EllipticCurveKeyPair.Constants.attrKeyTypeEllipticCurve, keySize: 256)
+            let base64 = exportData.base64EncodedString()
+            print("----\n\n\(base64)\n\n----")
         } catch {
             publicKeyTextView.text = "Error: \(error)"
         }
@@ -107,7 +129,13 @@ class SignatureViewController: UIViewController {
             self.signatureTextView.text = signature.base64EncodedString()
             print("Digest: \(String(describing: String(data: digest, encoding: .utf8)))")
             print("Signature: \(String(describing: self.signatureTextView.text))")
+            
+            print("Signature Length: \(signature.count)")
+            
             self.verify(self)
+            
+            let pubKey = try Shared.keypair.getPublicKey()
+            State.shared.lastSignature = State.Signature(publicKey: pubKey, digest: digest, signature: signature)
         }, catchToMain: { error in
             self.signatureTextView.text = "Error: \(error)"
         })
@@ -129,7 +157,8 @@ class SignatureViewController: UIViewController {
         }
 
         do {
-            try Shared.keypair.verify(signature: signature, originalDigest: digest, hash: .sha512)
+            let publicKey = try Shared.keypair.getPublicKey()
+            try Shared.keypair.verify(signature: signature, originalDigest: digest, publicKey: publicKey, hash: .sha512)
             try printVerifySignatureInOpenssl(manager: Shared.keypair, signed: signature, digest: digest, hashAlgorithm: "sha512")
             verifyTextView.text = "Verified successfully"
         } catch {
@@ -145,4 +174,49 @@ class SignatureViewController: UIViewController {
         context.setCredential(invalidPassword.data(using: .utf8), type: .applicationPassword)
     }
 
+    
+    // SECP256R1 EC public key header (length + EC params (sequence) + bitstring
+    private let kCryptoExportImportManagerSecp256r1CurveLen = 256
+    private let kCryptoExportImportManagerSecp256r1header: [UInt8] = [0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01, 0x06, 0x08, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07, 0x03, 0x42, 0x00]
+    private let kCryptoExportImportManagerSecp256r1headerLen = 26
+    
+    private let kCryptoExportImportManagerSecp384r1CurveLen = 384
+    private let kCryptoExportImportManagerSecp384r1header: [UInt8] = [0x30, 0x76, 0x30, 0x10, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01, 0x06, 0x05, 0x2B, 0x81, 0x04, 0x00, 0x22, 0x03, 0x62, 0x00]
+    private let kCryptoExportImportManagerSecp384r1headerLen = 23
+    
+    private let kCryptoExportImportManagerSecp521r1CurveLen = 521
+    private let kCryptoExportImportManagerSecp521r1header: [UInt8] = [0x30, 0x81, 0x9B, 0x30, 0x10, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01, 0x06, 0x05, 0x2B, 0x81, 0x04, 0x00, 0x23, 0x03, 0x81, 0x86, 0x00]
+    private let kCryptoExportImportManagerSecp521r1headerLen = 25
+    
+    /**
+     * This function prepares a EC public key generated with Apple SecKeyGeneratePair to be exported
+     * and used outisde iOS, be it openSSL, PHP, Perl, whatever. It basically adds the proper ASN.1
+     * header and codifies the result as valid base64 string, 64 characters split.
+     * Returns a DER representation of the key.
+     */
+    func exportECPublicKeyToDER(_ rawPublicKeyBytes: Data, keyType: String, keySize: Int) -> Data {
+        print("Exporting EC raw key: \(rawPublicKeyBytes)")
+        // first retrieve the header with the OID for the proper key  curve.
+        let curveOIDHeader: [UInt8]
+        let curveOIDHeaderLen: Int
+        switch (keySize) {
+        case kCryptoExportImportManagerSecp256r1CurveLen:
+            curveOIDHeader = kCryptoExportImportManagerSecp256r1header
+            curveOIDHeaderLen = kCryptoExportImportManagerSecp256r1headerLen
+        case kCryptoExportImportManagerSecp384r1CurveLen:
+            curveOIDHeader = kCryptoExportImportManagerSecp384r1header
+            curveOIDHeaderLen = kCryptoExportImportManagerSecp384r1headerLen
+        case kCryptoExportImportManagerSecp521r1CurveLen:
+            curveOIDHeader = kCryptoExportImportManagerSecp521r1header
+            curveOIDHeaderLen = kCryptoExportImportManagerSecp521r1headerLen
+        default:
+            curveOIDHeader = []
+            curveOIDHeaderLen = 0
+        }
+        var data = Data(bytes: curveOIDHeader, count: curveOIDHeaderLen)
+        
+        // now add the raw data from the retrieved public key
+        data.append(rawPublicKeyBytes)
+        return data
+    }
 }

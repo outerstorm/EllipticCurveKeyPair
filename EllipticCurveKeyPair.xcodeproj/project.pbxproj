@@ -31,6 +31,7 @@
 		A381D7B21F98A58B0069D88C /* SHA256Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = A381D7AF1F98A58B0069D88C /* SHA256Test.swift */; };
 		A3FD3A961FBC54A900747A5F /* SignatureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FD3A951FBC54A900747A5F /* SignatureViewController.swift */; };
 		A3FD3A981FBC54B700747A5F /* EncryptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FD3A971FBC54B700747A5F /* EncryptionViewController.swift */; };
+		D0D39ACC2236F5B60080F44E /* VerifyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D39ACA2236F5B60080F44E /* VerifyViewController.swift */; };
 		DD7502881C68FEDE006590AF /* EllipticCurveKeyPair.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6DA0F1BF000BD002C0205 /* EllipticCurveKeyPair.framework */; };
 /* End PBXBuildFile section */
 
@@ -116,6 +117,7 @@
 		A3FD3A971FBC54B700747A5F /* EncryptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionViewController.swift; sourceTree = "<group>"; };
 		AD2FAA261CD0B6D800659CF4 /* EllipticCurveKeyPair.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = EllipticCurveKeyPair.plist; sourceTree = "<group>"; };
 		AD2FAA281CD0B6E100659CF4 /* EllipticCurveKeyPairTests.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = EllipticCurveKeyPairTests.plist; sourceTree = "<group>"; };
+		D0D39ACA2236F5B60080F44E /* VerifyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyViewController.swift; sourceTree = "<group>"; };
 		DD75027A1C68FCFC006590AF /* EllipticCurveKeyPair-macOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EllipticCurveKeyPair-macOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -241,11 +243,12 @@
 			isa = PBXGroup;
 			children = (
 				A35A3FF51FB9CC1B0093C12B /* AppDelegate.swift */,
-				A35A3FF91FB9CC1B0093C12B /* SignatureViewController.swift */,
-				A35A3FFB1FB9CC1B0093C12B /* Main.storyboard */,
 				A35A3FFE1FB9CC1B0093C12B /* Assets.xcassets */,
-				A35A40001FB9CC1B0093C12B /* LaunchScreen.storyboard */,
 				A35A40031FB9CC1B0093C12B /* Info.plist */,
+				A35A40001FB9CC1B0093C12B /* LaunchScreen.storyboard */,
+				A35A3FFB1FB9CC1B0093C12B /* Main.storyboard */,
+				A35A3FF91FB9CC1B0093C12B /* SignatureViewController.swift */,
+				D0D39ACA2236F5B60080F44E /* VerifyViewController.swift */,
 			);
 			path = "Demo-iOS";
 			sourceTree = "<group>";
@@ -557,6 +560,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A35A3FFA1FB9CC1B0093C12B /* SignatureViewController.swift in Sources */,
+				D0D39ACC2236F5B60080F44E /* VerifyViewController.swift in Sources */,
 				A35A3FF61FB9CC1B0093C12B /* AppDelegate.swift in Sources */,
 				A35A40121FB9CC8D0093C12B /* Utils.swift in Sources */,
 			);

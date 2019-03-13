@@ -29,7 +29,7 @@ extension String: Error {}
 
 func printVerifySignatureInOpenssl(manager: EllipticCurveKeyPair.Manager, signed: Data, digest: Data, hashAlgorithm: String) throws {
     assert(hashAlgorithm.hasPrefix("sha"))
-    var publicKeyBase = (try? manager.publicKey().data().DER.base64EncodedString()) ?? "error fetching public key"
+    var publicKeyBase = (try? manager.getPublicKey().data().DER.base64EncodedString()) ?? "error fetching public key"
     publicKeyBase.insert("\n", at: publicKeyBase.index(publicKeyBase.startIndex, offsetBy: 64))
     
     var shell: [String] = []
